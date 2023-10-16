@@ -73,7 +73,11 @@ yarn hardhat node
 yarn hardhat deploy --network hardhat/localhost
 ```
 
-4. Run tests
+4.0. Import local hardhat network to metamask. (https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/)  
+4.1. Import coin to metamask by specifying the contract address.
+4.2. If you get a nonce error in metamask, reset the metamask nonce settings for both wallets
+
+5. Run tests
 
 ```
 yarn test

@@ -15,9 +15,11 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 31337,
+      initialBaseFeePerGas: 0,
     },
     localhost: {
       chainId: 31337,
+      initialBaseFeePerGas: 0,
     },
     sepolia: {
       url: SEPOLIA_RPC_URL,
@@ -45,6 +47,9 @@ module.exports = {
     compilers: [
       {
         version: '0.8.7',
+      },
+      {
+        version: '0.8.20',
       },
       {
         version: '0.4.24',
