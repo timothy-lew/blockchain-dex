@@ -16,15 +16,15 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const chainId = network.config.chainId;
 
   log('----------------------------------------------------');
-  log('Deploying MEM and waiting for confirmations...');
-  const MEM = await deploy('MEMToken', {
+  log('Deploying OrderBook and waiting for confirmations...');
+  const OrderBook = await deploy('OrderBook', {
     from: deployer,
     log: true,
     // we need to wait if on a live network so we can verify properly
     waitConfirmations: network.config.blockConfirmations || 1,
   });
   // log(MEM);
-  log(`MEMToken deployed at ${MEM.address}`);
+  log(`OrderBook deployed at ${OrderBook.address}`);
 
   if (
     !developmentChains.includes(network.name) &&
@@ -35,4 +35,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   }
 };
 
-module.exports.tags = ['all', 'mem'];
+module.exports.tags = ['all', 'OrderBook'];
