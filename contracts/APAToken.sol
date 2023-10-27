@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 
-// pragma solidity ^0.8.20;
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract APAToken is ERC20 {
-    string public str = "APA";
     address public creator;
 
     constructor() ERC20("APAToken", "APA") {
@@ -15,16 +13,7 @@ contract APAToken is ERC20 {
         creator = msg.sender;
     }
 
-    function getString() public view returns (string memory) {
-        return str;
-    }
-
     function getCreator() public view returns (address) {
         return creator;
-    }
-
-    function transferTokens(address to, uint256 amount) public {
-        _transfer(msg.sender, to, amount);
-        emit Transfer(msg.sender, to, amount);
     }
 }

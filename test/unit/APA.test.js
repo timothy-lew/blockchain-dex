@@ -15,7 +15,7 @@ const { developmentChains } = require('../../helper-hardhat-config');
 
       describe('constructor', function () {
         it('check APA contract deployed correctly', async () => {
-          const response = await apa.getString();
+          const response = await apa.symbol();
 
           assert.equal(response, 'APA');
         });
@@ -42,7 +42,7 @@ const { developmentChains } = require('../../helper-hardhat-config');
 
           const tx = await apa
             .connect(deployer)
-            .transferTokens(secondAccount.address, amountToSend);
+            .transfer(secondAccount.address, amountToSend);
           // console.log(tx);
           await tx.wait();
 
