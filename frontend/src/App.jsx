@@ -1,21 +1,21 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { Navbar, OrderForm } from './components'
+import { Navbar, Order } from './components'
 import { Home } from './pages'
 
 const App = () => {
   return (
-    <div>
+    <div className="relative bg-baseColor min-h-screen font-body text-textMain">
       <div>
         <Navbar />
       </div>
       <div>
-        <OrderForm />
+        <Order />
       </div>
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={<Home />} />
-      </Routes>
+      </Routes> */}
     </div>
   )
 }
