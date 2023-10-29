@@ -200,4 +200,49 @@ const provider = ethers.provider;
         assert(log.args[1], deployer.target);
         assert(log.args[2], true);
       });
+
+      // Test case: Placing a buy order
+      it('get buy and sell orders', async () => {
+        // send from deployer to MEM
+        await quoteToken.approve(orderbook.target, 10000);
+
+        // send from deployer to APA
+        await baseToken.approve(orderbook.target, 10000);
+
+        // send from deployer to orderbook
+        await orderbook.placeSellOrder(
+          10,
+          50,
+          baseToken.target,
+          quoteToken.target
+        );
+
+        await orderbook.placeSellOrder(
+          10,
+          50,
+          baseToken.target,
+          quoteToken.target
+        );
+
+        // send from deployer to orderbook
+        await orderbook.placeBuyOrder(
+          10,
+          50,
+          baseToken.target,
+          quoteToken.target
+        );
+
+        await orderbook.placeBuyOrder(
+          10,
+          50,
+          baseToken.target,
+          quoteToken.target
+        );
+
+        let a = await orderbook.getBuyOrders();
+        assert.equal(a.length, 2);
+
+        let b = await orderbook.getSellOrders();
+        assert.equal(b.length, 2);
+      });
     });

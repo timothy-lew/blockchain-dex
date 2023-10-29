@@ -240,4 +240,12 @@ contract OrderBook {
     function min(uint256 a, uint256 b) internal pure returns (uint256) {
         return a < b ? a : b;
     }
+
+    function getBuyOrders() public view returns (Order[] memory) {
+        return bidOrders;
+    }
+
+    function getSellOrders() public view returns (Order[] memory) {
+        return askOrders;
+    }
 }
