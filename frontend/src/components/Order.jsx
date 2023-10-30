@@ -73,7 +73,7 @@ function Order() {
   }
 
   return (
-    <div className="bg-primary w-1/2 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
+    <div className="bg-[#0E111B] w-1/2 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
       <Orderbook market={markets[marketIndex]} />
       <div className="w-1/2 px-4 flex flex-col justify-center">
         <MarketDropDown

@@ -7,21 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        baseColor: '#111213',
+        baseColor: '#192134',
+        baseSecondaryColor: '#070815',
         primary: '#1A1D1F',
         secondary: '#272A2E',
-        tertiary: '#ffffff0f',
+        tertiary: '#1f2639',
         textMain: '#F5F5F7',
         textSecondary: '#A4A5A8',
-        buttonBlue: '#007AFF',
-        buttonPurple: '#482BFF',
-        buttonGreen: '#00A862',
-        buttonDarkGreen: '#00AF92',
         borderColor: '#21273a',
       }
     },
     fontFamily: {
-      'body': ['Play', 'sans-serif'],
+      'body': ['Roboto', '"Helvetica Neue"', 'serif'],
     },
   },
   plugins: [],

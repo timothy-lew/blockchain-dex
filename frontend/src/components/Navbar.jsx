@@ -15,7 +15,7 @@ function Navbar() {
     <div className="bg-base min-w-full flex flex-row justify-between items-center px-12 py-6">
       <p>Some Logo</p>
       {!isConnected && (
-        <button onClick={() => connect()} className="bg-gradient-to-l from-buttonBlue from-0% to-buttonPurple to-100% font-bold p-4 text-base rounded-2xl">
+        <button onClick={() => connect()} className="bg-[#243056] font-bold py-2.5 px-5 text-[#5981F3] hover:text-[#3b4874] rounded-2xl">
           Connect Wallet
         </button>
       )}

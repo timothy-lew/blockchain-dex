@@ -3,8 +3,8 @@ import React from 'react'
 const ActiveOrder = ({ rows }) => {
   return (
     <div className="w-1/2 mt-5 text-center">
-      Active Orders
-      <div className="relative bg-primary h-72 border-2 border-solid border-borderColor rounded-2xl">
+      <p className="mb-1">Active Orders</p>
+      <div className="relative bg-[#0E111B] h-72 border-2 border-solid border-borderColor rounded-2xl">
         <table className="w-full">
           <thead>
             <tr className="border-b-2 border-solid border-borderColor divide-x-2 divide-borderColor">
