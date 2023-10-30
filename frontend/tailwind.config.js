@@ -17,6 +17,7 @@ export default {
         buttonPurple: '#482BFF',
         buttonGreen: '#00A862',
         buttonDarkGreen: '#00AF92',
+        borderColor: '#21273a',
       }
     },
     fontFamily: {

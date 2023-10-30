@@ -1,12 +1,13 @@
 import React from 'react'
 
-import { Navbar, Order } from './components'
+import { ActiveOrder, Navbar, Order } from './components'
 
 const App = () => {
   return (
-    <div className="relative bg-baseColor min-h-screen font-body text-textMain">
+    <div className="relative flex flex-col items-center bg-baseColor min-h-screen font-body text-textMain">
       <Navbar />
       <Order />
+      <ActiveOrder />
     </div>
   )
 }

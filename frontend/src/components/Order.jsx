@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 
-import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
+import MarketDropDown from './MarketDropDown'
 import NumberInput from './NumberInput'
+import Orderbook from './Orderbook'
+
+import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
 
 const defaultFormState = {
   inputPrice: '',
@@ -12,9 +15,12 @@ const defaultFormState = {
   total: 0,
 }
 
+const markets = ['APA/ETH', 'MEM/ETH']
+
 function Order() {
   const [formState, setFormState] = useState(defaultFormState)
   const [isBuySide, setIsBuySide] = useState(true)
+  const [marketIndex, setMarketIndex] = useState(0)
 
   const handleFormChange = (key = '', value = '') => {
     const numberValue = Number(value) ?? 0
@@ -61,28 +67,35 @@ function Order() {
     }
   }
 
+  const selectMarketIndex = (marketIndex) => {
+    if (marketIndex === 0 || marketIndex === 1) setMarketIndex(marketIndex)
+    return
+  }
+
   return (
-    <div className="absolute top-1/4 left-1/4 bg-primary w-1/2 min-h-[40%] flex flex-row py-8 px-16 border-2 border-solid border-[#21273a] rounded-2xl">
-      <div className="w-1/2">Orderbook</div>
-      <div className="w-1/2 flex flex-col justify-center">
-        <h4>Market Name</h4>
-        <form>
-          <NumberInput
-            header="Price"
-            onChangeFunc={(event) => handleFormChange('price', event.target.value)}
-            inputState={formState.inputPrice}
-          />
-          <NumberInput
-            header="Quantity"
-            onChangeFunc={(event) => handleFormChange('quantity', event.target.value)}
-            inputState={formState.inputQuantity}
-          />
-          <NumberInput
-            header="Total"
-            onChangeFunc={(event) => handleFormChange('total', event.target.value)}
-            inputState={formState.inputTotal}
-          />
-        </form>
+    <div className="bg-primary w-1/2 min-h-[40%] flex flex-row mt-[10%] border-2 border-solid border-borderColor rounded-2xl">
+      <Orderbook market={markets[marketIndex]} />
+      <div className="w-1/2 px-4 flex flex-col justify-center">
+        <MarketDropDown
+          selectMarket={selectMarketIndex}
+        >
+          {markets[marketIndex]}
+        </MarketDropDown>
+        <NumberInput
+          header="Price"
+          onChangeFunc={(event) => handleFormChange('price', event.target.value)}
+          inputState={formState.inputPrice}
+        />
+        <NumberInput
+          header="Quantity"
+          onChangeFunc={(event) => handleFormChange('quantity', event.target.value)}
+          inputState={formState.inputQuantity}
+        />
+        <NumberInput
+          header="Total"
+          onChangeFunc={(event) => handleFormChange('total', event.target.value)}
+          inputState={formState.inputTotal}
+        />
         <div className="flex flex-row mt-8 w-full gap-4 font-bold">
           {isBuySide && <button className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
           <button onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
