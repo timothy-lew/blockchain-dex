@@ -9,6 +9,7 @@ const MarketDropDown = ({ children, selectMarket }) => {
   const handleMarketClick = (marketNum) => {
     if (marketNum === 0) selectMarket(0)
     if (marketNum === 1) selectMarket(1)
+    if (marketNum === 2) selectMarket(2)
     setOpen(false)
     return
   }
@@ -24,6 +25,7 @@ const MarketDropDown = ({ children, selectMarket }) => {
         <div className="absolute bg-secondary w-fit p-2 border-2 border-solid border-tertiary divide-y-2 divide-solid divide-tertiary cursor-pointer">
           <div className="text-xl" onClick={() => handleMarketClick(0)}>APA/ETH</div>
           <div className="text-xl" onClick={() => handleMarketClick(1)}>MEM/ETH</div>
+          <div className="text-xl" onClick={() => handleMarketClick(2)}>APA/MEM</div>
         </div>
       )}
     </div>
