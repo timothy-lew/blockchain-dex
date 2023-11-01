@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { useAccount, useBalance, useContractWrite, usePrepareContractWrite, useWebSocketPublicClient } from 'wagmi'
+import { useAccount, useBalance, useContractWrite } from 'wagmi'
 
 import MarketDropDown from './MarketDropDown'
 import NumberInput from './NumberInput'
 import Orderbook from './Orderbook'
 
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
-import { apaTokenAddress, memTokenAddress } from '../utils/tokens'
 import { orderbookABI } from '../utils/abis'
+import marketsJson from '../utils/markets/markets.json'
 
 const defaultFormState = {
   inputPrice: '',
@@ -18,7 +18,7 @@ const defaultFormState = {
   total: 0,
 }
 
-const markets = ['APA/ETH', 'MEM/ETH', 'APA/MEM']
+const markets = marketsJson.markets
 
 function Order() {
   const [formState, setFormState] = useState(defaultFormState)
@@ -27,24 +27,7 @@ function Order() {
 
   const { address, isConnected } = useAccount()
 
-  const getTokenAddresses = (market) => {
-    // returns [baseTokenAddr, quoteTokenAddr]
-    switch (market) {
-      case 'APA/ETH': {
-        return [apaTokenAddress, ''] // need add eth token address
-      }
-      case 'MEM/ETH': {
-        return [memTokenAddress, ''] // need add eth token address
-      }
-      case 'APA/MEM': {
-        return [apaTokenAddress, memTokenAddress]
-      }
-      default:
-        break
-    }
-  }
-
-  const [baseTokenAddress, quoteTokenAddress] = getTokenAddresses(markets[marketIndex])
+  const { baseTokenAddress, quoteTokenAddress } = markets[marketIndex]
   const { data: baseTokenBalance } = useBalance({ address: address, token: baseTokenAddress === '' ? undefined : baseTokenAddress })
   const { data: quoteTokenBalance } = useBalance({ address: address, token: quoteTokenAddress === '' ? undefined : quoteTokenAddress })
 
@@ -100,7 +83,7 @@ function Order() {
   }
 
   const selectMarketIndex = (marketIndex) => {
-    if (marketIndex === 0 || marketIndex === 1 || marketIndex === 2) setMarketIndex(marketIndex)
+    setMarketIndex(marketIndex)
     setFormState(defaultFormState)
     return
   }
@@ -122,36 +105,37 @@ function Order() {
 
   return (
     <div className="bg-[#0E111B] w-1/2 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
-      <Orderbook market={markets[marketIndex]} />
+      <Orderbook
+        baseDenom={markets[marketIndex].baseDenom}
+        quoteDenom={markets[marketIndex].quoteDenom}
+      />
       <div className="w-1/2 px-4 flex flex-col justify-center">
-        <div className="flex flex-row">
-          <MarketDropDown
-            selectMarket={selectMarketIndex}
-          >
-            {markets[marketIndex]}
-          </MarketDropDown>
-          <div className='ml-4 border-2 border-red-500 p-4'>{isLoading ? 'Loading' : data}</div>
-        </div>
+        <MarketDropDown
+          markets={markets}
+          selectMarket={selectMarketIndex}
+        >
+          {markets[marketIndex].name}
+        </MarketDropDown>
         <NumberInput
           header="Price"
           onChangeFunc={(event) => handleFormChange('price', event.target.value)}
           inputState={formState.inputPrice}
-          baseToken={markets[marketIndex].split('/')[0]}
-          quoteToken={markets[marketIndex].split('/')[1]}
+          baseToken={markets[marketIndex].baseDenom}
+          quoteToken={markets[marketIndex].quoteDenom}
         />
         <NumberInput
           header="Quantity"
           onChangeFunc={(event) => handleFormChange('quantity', event.target.value)}
           inputState={formState.inputQuantity}
-          baseToken={markets[marketIndex].split('/')[0]}
-          quoteToken={markets[marketIndex].split('/')[1]}
+          baseToken={markets[marketIndex].baseDenom}
+          quoteToken={markets[marketIndex].quoteDenom}
         />
         <NumberInput
           header="Total"
           onChangeFunc={(event) => handleFormChange('total', event.target.value)}
           inputState={formState.inputTotal}
-          baseToken={markets[marketIndex].split('/')[0]}
-          quoteToken={markets[marketIndex].split('/')[1]}
+          baseToken={markets[marketIndex].baseDenom}
+          quoteToken={markets[marketIndex].quoteDenom}
         />
         <div className="flex flex-row mt-8 w-full gap-4 font-bold">
           {isBuySide && <button onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}

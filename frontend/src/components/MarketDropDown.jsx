@@ -3,13 +3,15 @@ import React, { useState } from 'react'
 import ArrowDown from '../assets/ArrowDown.svg'
 import ArrowUp from '../assets/ArrowUp.svg'
 
-const MarketDropDown = ({ children, selectMarket }) => {
+const MarketDropDown = ({ children, markets, selectMarket }) => {
   const [open, setOpen] = useState(false)
 
   const handleMarketClick = (marketNum) => {
-    if (marketNum === 0) selectMarket(0)
-    if (marketNum === 1) selectMarket(1)
-    if (marketNum === 2) selectMarket(2)
+    if (typeof marketNum !== 'number') {
+      console.error('handleMarketClick - marketNum not number')
+      return
+    }
+    selectMarket(marketNum)
     setOpen(false)
     return
   }
@@ -23,9 +25,9 @@ const MarketDropDown = ({ children, selectMarket }) => {
       </button>
       {open && (
         <div className="absolute bg-secondary w-fit p-2 border-2 border-solid border-tertiary divide-y-2 divide-solid divide-tertiary cursor-pointer">
-          <div className="text-xl" onClick={() => handleMarketClick(0)}>APA/ETH</div>
-          <div className="text-xl" onClick={() => handleMarketClick(1)}>MEM/ETH</div>
-          <div className="text-xl" onClick={() => handleMarketClick(2)}>APA/MEM</div>
+          {markets?.length > 0 && markets.map((market, index) => (
+            <div className="text-xl" key={`market-dropdown-${index}`} onClick={() => handleMarketClick(index)}>{market?.name}</div>
+          ))}
         </div>
       )}
     </div>
