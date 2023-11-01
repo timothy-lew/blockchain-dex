@@ -6,7 +6,8 @@ import NumberInput from './NumberInput'
 import Orderbook from './Orderbook'
 
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
-import { orderbookABI } from '../utils/abis'
+import useApproveERC20ForSpend from '../hooks/useApproveERC20ForSpend'
+import { ORDER_CONTRACT_ADDR, orderbookABI } from '../utils/constants'
 import marketsJson from '../utils/markets/markets.json'
 
 const defaultFormState = {
@@ -18,12 +19,19 @@ const defaultFormState = {
   total: 0,
 }
 
+const defaultErrorState = {
+  priceError: '',
+  quantityError: '',
+  totalError: '',
+}
+
 const markets = marketsJson.markets
 
 function Order() {
   const [formState, setFormState] = useState(defaultFormState)
   const [isBuySide, setIsBuySide] = useState(true)
   const [marketIndex, setMarketIndex] = useState(0)
+  const [errObj, setErrObj] = useState(defaultErrorState)
 
   const { address, isConnected } = useAccount()
 
@@ -31,10 +39,12 @@ function Order() {
   const { data: baseTokenBalance } = useBalance({ address: address, token: baseTokenAddress === '' ? undefined : baseTokenAddress })
   const { data: quoteTokenBalance } = useBalance({ address: address, token: quoteTokenAddress === '' ? undefined : quoteTokenAddress })
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
-    address: '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9',
+  const { approve, approveLoading } = useApproveERC20ForSpend(markets[marketIndex].baseTokenAddress, markets[marketIndex].quoteTokenAddress, isBuySide)
+
+  const { isLoading: orderLoading, isSuccess: orderSuccess, writeAsync } = useContractWrite({
+    address: ORDER_CONTRACT_ADDR,
     abi: orderbookABI,
-    functionName: 'placeBuyOrder',
+    functionName: isBuySide ? 'placeBuyOrder' : 'placeSellOrder',
   })
 
   const handleFormChange = (key = '', value = '') => {
@@ -88,19 +98,49 @@ function Order() {
     return
   }
 
-  const submitOrder = () => {
-    if (formState.price === 0 || formState.quantity === 0) return
+  const submitOrder = async () => {
+    // Clear Error
+    const submitOrderErr = {
+      priceError: '',
+      quantityError: '',
+      totalError: '',
+    }
+
+    // Error Handling
+    if (formState.price === 0) {
+      submitOrderErr.priceError = 'Price cannot be 0'
+    }
+
+    if (formState.quantity === 0) {
+      submitOrderErr.quantityError = 'Quantity cannot be 0'
+    }
 
     const quoteTokenBalanceFormatted = parseFloat(quoteTokenBalance.formatted)
     const baseTokenBalanceFormatted = parseFloat(baseTokenBalance.formatted)
 
-    if (isBuySide && quoteTokenBalanceFormatted < formState.total) return
-    if (!isBuySide && baseTokenBalanceFormatted < formState.quantity) return
+    if (isBuySide && quoteTokenBalanceFormatted < formState.total) {
+      submitOrderErr.totalError = `${markets[marketIndex].quoteDenom} balance is insufficient`
+    }
 
-    write({
+    if (!isBuySide && baseTokenBalanceFormatted < formState.quantity && submitOrderErr.quantityError === '') {
+      submitOrderErr.quantityError = `${markets[marketIndex].baseDenom} balance insufficient`
+    }
+
+    if (submitOrderErr.priceError !== '' || submitOrderErr.quantityError !== '' || submitOrderErr.totalError !== '') {
+      setErrObj(submitOrderErr)
+      return
+    } else {
+      setErrObj(defaultErrorState)
+    }
+
+    // Approve ERC20 token for spending by order contract
+    const approveAmount = isBuySide ? formState.total : formState.quantity
+    await approve(approveAmount, address, ORDER_CONTRACT_ADDR)
+    const txHash = await writeAsync({
       args: [formState.price, formState.quantity, baseTokenAddress, quoteTokenAddress],
       from: address,
     })
+    console.log(`write to order contract ${orderSuccess} with hash: ${txHash}`)
   }
 
   return (
@@ -108,6 +148,8 @@ function Order() {
       <Orderbook
         baseDenom={markets[marketIndex].baseDenom}
         quoteDenom={markets[marketIndex].quoteDenom}
+        baseTokenAddress={markets[marketIndex].baseTokenAddress}
+        quoteTokenAddress={markets[marketIndex].quoteTokenAddress}
       />
       <div className="w-1/2 px-4 flex flex-col justify-center">
         <MarketDropDown
@@ -122,6 +164,7 @@ function Order() {
           inputState={formState.inputPrice}
           baseToken={markets[marketIndex].baseDenom}
           quoteToken={markets[marketIndex].quoteDenom}
+          errorText={errObj.priceError}
         />
         <NumberInput
           header="Quantity"
@@ -129,6 +172,7 @@ function Order() {
           inputState={formState.inputQuantity}
           baseToken={markets[marketIndex].baseDenom}
           quoteToken={markets[marketIndex].quoteDenom}
+          errorText={errObj.quantityError}
         />
         <NumberInput
           header="Total"
@@ -136,14 +180,22 @@ function Order() {
           inputState={formState.inputTotal}
           baseToken={markets[marketIndex].baseDenom}
           quoteToken={markets[marketIndex].quoteDenom}
+          errorText={errObj.totalError}
         />
-        <div className="flex flex-row mt-8 w-full gap-4 font-bold">
-          {isBuySide && <button onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
-          <button onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
-            <img src={ChangeSideIcon} className="block m-auto" />
-          </button>
-          {!isBuySide && <button className="w-3/4 bg-red-500 p-4 rounded">Sell</button>}
-        </div>
+        {!(approveLoading && orderLoading) && (
+          <div className="flex flex-row mt-8 w-full gap-4 font-bold">
+            {isBuySide && <button onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
+            <button onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
+              <img src={ChangeSideIcon} className="block m-auto" />
+            </button>
+            {!isBuySide && <button onClick={submitOrder} className="w-3/4 bg-red-500 p-4 rounded">Sell</button>}
+          </div>
+        )}
+        {(approveLoading || orderLoading) && (
+          <div className="mt-8 w-full gap-4 font-bold">
+            Order Executing...
+          </div>
+        )}
       </div>
     </div>
   )

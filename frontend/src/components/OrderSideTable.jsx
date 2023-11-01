@@ -10,9 +10,9 @@ const OrderSideTable = ({ side, rows }) => {
         <tbody>
           {rows?.map((row) => (
             <tr key={uniqueId('row-')} className='h-5 w-full'>
-              <td className="w-1/3 pl-4">{row?.price}</td>
-              <td className="w-1/3 pl-4">{row?.quantity}</td>
-              <td className="w-1/3 text-center">{row?.price * row?.quantity}</td>
+              <td className="w-1/3 pl-4">{BigInt(row?.price).toString()}</td>
+              <td className="w-1/3 pl-4">{BigInt(row?.quantity).toString()}</td>
+              <td className="w-1/3 text-center">{BigInt(row?.price * row?.quantity).toString()}</td>
             </tr>
           ))}
           {numFakeRows > 0 && times(numFakeRows, () => (
