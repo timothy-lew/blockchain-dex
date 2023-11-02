@@ -1,10 +1,31 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import { WagmiConfig, createConfig, configureChains } from 'wagmi'
+import { hardhat } from 'wagmi/chains'
+import { publicProvider } from 'wagmi/providers/public'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+
+import App from './App'
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+
+const { chains, publicClient } = configureChains(
+  [hardhat],
+  [publicProvider()],
+)
+
+const config = createConfig({
+  autoConnect: true,
+  connectors: [new InjectedConnector({ chains })],
+  publicClient,
+})
+
+const root = ReactDOM.createRoot(document.getElementById('root'))
+
+root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <WagmiConfig config={config}>
+      <App />
+    </WagmiConfig>
+  </React.StrictMode>
 )

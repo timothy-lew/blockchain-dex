@@ -45,7 +45,7 @@ contract OrderBook {
         address quoteToken
     ) external {
         // Check that the trader has approved enough quote tokens to cover the order value
-        uint256 orderValue = price * quantity;
+        uint256 orderValue = (price * quantity)/(10**18);
         IERC20 quoteTokenContract = IERC20(quoteToken);
         require(
             quoteTokenContract.allowance(msg.sender, address(this)) >=
@@ -148,7 +148,7 @@ contract OrderBook {
                 // Execute the trade
                 IERC20 baseTokenContract = IERC20(buyOrder.baseToken);
                 IERC20 quoteTokenContract = IERC20(buyOrder.quoteToken);
-                uint256 tradeValue = tradeQuantity * buyOrder.price;
+                uint256 tradeValue = (tradeQuantity * buyOrder.price)/(10**18);
                 // Transfer base tokens from the seller to the buyer
                 baseTokenContract.transferFrom(
                     sellOrder.trader,
@@ -193,7 +193,7 @@ contract OrderBook {
                 // Execute the trade
                 IERC20 baseTokenContract = IERC20(sellOrder.baseToken);
                 IERC20 quoteTokenContract = IERC20(sellOrder.quoteToken);
-                uint256 tradeValue = tradeQuantity * sellOrder.price;
+                uint256 tradeValue = (tradeQuantity * sellOrder.price)/(10**18);
                 // Transfer base tokens from the seller to the buyer
                 baseTokenContract.transferFrom(
                     sellOrder.trader,
