@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import React, { useState } from 'react'
 import { useAccount, useBalance, useContractWrite } from 'wagmi'
 
@@ -133,14 +134,20 @@ function Order() {
       setErrObj(defaultErrorState)
     }
 
+    // Shifting to ERC20 token decimal
+    const shiftedPrice = new BigNumber(formState.price).shiftedBy(18)
+    const shiftedQuantity = new BigNumber(formState.quantity).shiftedBy(18)
+    const shiftedTotal = new BigNumber(formState.total).shiftedBy(18)
+
     // Approve ERC20 token for spending by order contract
-    const approveAmount = isBuySide ? formState.total : formState.quantity
+    const approveAmount = isBuySide ? shiftedTotal : shiftedQuantity
     await approve(approveAmount, address, ORDER_CONTRACT_ADDR)
-    const txHash = await writeAsync({
-      args: [formState.price, formState.quantity, baseTokenAddress, quoteTokenAddress],
+    const priceParam = isBuySide ? shiftedPrice : formState.price
+    const quantityParam = isBuySide ? formState.quantity : shiftedQuantity
+    await writeAsync({
+      args: [priceParam, quantityParam, baseTokenAddress, quoteTokenAddress],
       from: address,
     })
-    console.log(`write to order contract ${orderSuccess} with hash: ${txHash}`)
   }
 
   return (

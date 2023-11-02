@@ -1,4 +1,5 @@
-import { useContractWrite, erc20ABI } from 'wagmi'
+import BigNumber from 'bignumber.js'
+import { erc20ABI, useContractWrite } from 'wagmi'
 
 const useApproveERC20ForSpend = (baseTokenAddress, quoteTokenAddress, isBuySide) => {
   try {
@@ -21,8 +22,8 @@ const useApproveERC20ForSpend = (baseTokenAddress, quoteTokenAddress, isBuySide)
     })
   
     const approve = async (approveAmount, walletAddress, spenderAddress) => {
-      if(typeof approveAmount !== 'number') {
-        throw new Error('useApproveERC20ForSpend - approveAmount is not a number')
+      if(!(approveAmount instanceof BigNumber)) {
+        throw new Error('useApproveERC20ForSpend - approveAmount is not a BigNumber')
       }
       if(typeof walletAddress !== 'string') {
         throw new Error('useApproveERC20ForSpend - walletAddress is not a string')
