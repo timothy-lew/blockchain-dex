@@ -1,20 +1,17 @@
-// SPDX-License-Identifier: GPL-3.0
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract MEMToken is ERC20 {
+contract Token is ERC20 {
     address public creator;
 
-    constructor() ERC20("MEMToken", "MEM") {
-        // mint 10000 coins to creator of contract
-        _mint(msg.sender, 10000 * 10 ** 18);
-        creator = msg.sender;
-    }
-
-    function getCreator() public view returns (address) {
-        return creator;
+    constructor(
+        string memory _name,
+        string memory _ticker,
+        uint256 _supply
+    ) ERC20(_name, _ticker) {
+        _mint(msg.sender, _supply);
     }
 
     // function to allow users to request tokens from creator
@@ -31,5 +28,24 @@ contract MEMToken is ERC20 {
 
         // transfer 'amount' of tokens from creator to the requester
         _transfer(creator, msg.sender, amount);
+    }
+}
+
+contract TokenFactory {
+    address[] public tokens;
+    uint256 public tokenCount;
+    event TokenDeployed(address tokenAddress);
+
+    function deployToken(
+        string calldata _name,
+        string calldata _ticker,
+        uint256 _supply
+    ) public returns (address) {
+        Token token = new Token(_name, _ticker, _supply);
+        token.transfer(msg.sender, _supply);
+        tokens.push(address(token));
+        tokenCount += 1;
+        emit TokenDeployed(address(token));
+        return address(token);
     }
 }
