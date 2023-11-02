@@ -51,6 +51,8 @@ const Orderbook = ({ baseDenom, quoteDenom, baseTokenAddress, quoteTokenAddress 
         if (beforePrice > afterPrice) return 1
         return 0
       })
+      console.log('xxxBuy', data[0].result)
+      console.log('xxxSell', data[1].result)
       setBuyOrders(currentMarketBuyOrders)
       setSellOrders(currentMarketSellOrders)
     }

@@ -141,11 +141,10 @@ function Order() {
 
     // Approve ERC20 token for spending by order contract
     const approveAmount = isBuySide ? shiftedTotal : shiftedQuantity
+
     await approve(approveAmount, address, ORDER_CONTRACT_ADDR)
-    const priceParam = isBuySide ? shiftedPrice : formState.price
-    const quantityParam = isBuySide ? formState.quantity : shiftedQuantity
     await writeAsync({
-      args: [priceParam, quantityParam, baseTokenAddress, quoteTokenAddress],
+      args: [shiftedPrice, shiftedQuantity, baseTokenAddress, quoteTokenAddress],
       from: address,
     })
   }
@@ -189,20 +188,13 @@ function Order() {
           quoteToken={markets[marketIndex].quoteDenom}
           errorText={errObj.totalError}
         />
-        {!(approveLoading && orderLoading) && (
-          <div className="flex flex-row mt-8 w-full gap-4 font-bold">
-            {isBuySide && <button onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
-            <button onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
-              <img src={ChangeSideIcon} className="block m-auto" />
-            </button>
-            {!isBuySide && <button onClick={submitOrder} className="w-3/4 bg-red-500 p-4 rounded">Sell</button>}
-          </div>
-        )}
-        {(approveLoading || orderLoading) && (
-          <div className="mt-8 w-full gap-4 font-bold">
-            Order Executing...
-          </div>
-        )}
+        <div className="flex flex-row mt-8 w-full gap-4 font-bold">
+          {isBuySide && <button onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
+          <button onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
+            <img src={ChangeSideIcon} className="block m-auto" />
+          </button>
+          {!isBuySide && <button onClick={submitOrder} className="w-3/4 bg-red-500 p-4 rounded">Sell</button>}
+        </div>
       </div>
     </div>
   )

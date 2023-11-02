@@ -1,4 +1,4 @@
-import orderbookJson from '../../../artifacts/contracts/orderbook.sol/OrderBook.json'
+import orderbookJson from '../../../artifacts/contracts/OrderBook.sol/OrderBook.json'
 
 export const orderbookABI = orderbookJson.abi
 

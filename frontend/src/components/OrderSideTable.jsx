@@ -15,11 +15,11 @@ const OrderSideTable = ({ side, rows }) => {
             const unshiftedTotal = unshiftedPrice.times(unshiftedQuantity)
             const formattedPrice = unshiftedPrice.shiftedBy(-18).toString(10)
             const formattedQuantity = unshiftedQuantity.shiftedBy(-18).toString(10)
-            const formattedTotal = unshiftedTotal.shiftedBy(-18).toString(10)
+            const formattedTotal = unshiftedTotal.shiftedBy(-36).toString(10)
             return (
               <tr key={uniqueId('row-')} className='h-5 w-full'>
-                <td className="w-1/3 pl-4">{side === 'buy' ? formattedPrice : unshiftedPrice.toString(10)}</td>
-                <td className="w-1/3 pl-4">{side === 'buy' ? unshiftedQuantity.toString(10) : formattedQuantity}</td>
+                <td className="w-1/3 pl-4">{formattedPrice}</td>
+                <td className="w-1/3 pl-4">{formattedQuantity}</td>
                 <td className="w-1/3 text-center">{formattedTotal}</td>
               </tr>
             )
