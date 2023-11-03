@@ -3,7 +3,7 @@ const {
   networkConfig,
   developmentChains,
 } = require('../helper-hardhat-config');
-// const { verify } = require('../utils/verify');
+const { verify } = require('../utils/verify');
 require('dotenv').config();
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
@@ -26,7 +26,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     process.env.ETHERSCAN_API_KEY
   ) {
     // verify contract
-    // await verify(dummy.address, [ethUsdPriceFeedAddress]);
+    await verify(APA.address, [], 'contracts/APAToken.sol:APAToken');
   }
 };
 
