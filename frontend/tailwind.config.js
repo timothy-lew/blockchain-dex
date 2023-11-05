@@ -13,7 +13,7 @@ export default {
         secondary: '#272A2E',
         tertiary: '#1f2639',
         textMain: '#F5F5F7',
-        textSecondary: '#A4A5A8',
+        textSecondary: '#6c86ad',
         borderColor: '#21273a',
       }
     },

@@ -3,13 +3,14 @@ import React, { useState } from 'react'
 import { useAccount, useBalance, useContractWrite } from 'wagmi'
 
 import MarketDropDown from './MarketDropDown'
-import NumberInput from './NumberInput'
 import Orderbook from './Orderbook'
 
+import ArrowDownCircle from '../assets/ArrowDownCircle.svg'
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
 import useApproveERC20ForSpend from '../hooks/useApproveERC20ForSpend'
 import { ORDER_CONTRACT_ADDR, orderbookABI } from '../utils/constants'
 import marketsJson from '../utils/markets/markets.json'
+import TokenInput from './TokenInput'
 
 const defaultFormState = {
   inputPrice: '',
@@ -47,6 +48,11 @@ function Order() {
     abi: orderbookABI,
     functionName: isBuySide ? 'placeBuyOrder' : 'placeSellOrder',
   })
+
+
+
+  const quoteTokenBalanceFormatted = isConnected ? parseFloat(quoteTokenBalance.formatted) : 0
+  const baseTokenBalanceFormatted = isConnected ? parseFloat(baseTokenBalance.formatted) : 0
 
   const handleFormChange = (key = '', value = '') => {
     const numberValue = Number(value) ?? 0
@@ -116,9 +122,6 @@ function Order() {
       submitOrderErr.quantityError = 'Quantity cannot be 0'
     }
 
-    const quoteTokenBalanceFormatted = parseFloat(quoteTokenBalance.formatted)
-    const baseTokenBalanceFormatted = parseFloat(baseTokenBalance.formatted)
-
     if (isBuySide && quoteTokenBalanceFormatted < formState.total) {
       submitOrderErr.totalError = `${markets[marketIndex].quoteDenom} balance is insufficient`
     }
@@ -150,7 +153,7 @@ function Order() {
   }
 
   return (
-    <div className="bg-[#0E111B] w-1/2 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
+    <div className="bg-[#0E111B] w-3/4 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
       <Orderbook
         baseDenom={markets[marketIndex].baseDenom}
         quoteDenom={markets[marketIndex].quoteDenom}
@@ -164,7 +167,21 @@ function Order() {
         >
           {markets[marketIndex].name}
         </MarketDropDown>
-        <NumberInput
+        <div className='mt-4 flex flex-col gap-6'>
+          <TokenInput
+            isBuySide={!isBuySide}
+            balance={quoteTokenBalanceFormatted}
+            tokenName={markets[marketIndex].quoteTokenName}
+            tokenTicker={markets[marketIndex].quoteDenom}
+          />
+          <TokenInput
+            isBuySide={isBuySide}
+            balance={baseTokenBalanceFormatted}
+            tokenName={markets[marketIndex].baseTokenName}
+            tokenTicker={markets[marketIndex].baseDenom}
+          />
+        </div>
+        {/* <NumberInput
           header="Price"
           onChangeFunc={(event) => handleFormChange('price', event.target.value)}
           inputState={formState.inputPrice}
@@ -187,7 +204,7 @@ function Order() {
           baseToken={markets[marketIndex].baseDenom}
           quoteToken={markets[marketIndex].quoteDenom}
           errorText={errObj.totalError}
-        />
+        /> */}
         <div className="flex flex-row mt-8 w-full gap-4 font-bold">
           {isBuySide && <button onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
           <button onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
