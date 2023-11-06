@@ -3,7 +3,7 @@ import { useContractReads } from 'wagmi'
 
 import OrderSideTable from './OrderSideTable'
 
-import { ORDER_CONTRACT_ADDR, orderbookABI } from '../utils/constants'
+import { ORDER_CONTRACT_ADDR, ORDER_BOOK_ABI } from '../utils/constants'
 
 const Orderbook = ({ baseDenom, quoteDenom, baseTokenAddress, quoteTokenAddress }) => {
   const [buyOrders, setBuyOrders] = useState([])
@@ -11,7 +11,7 @@ const Orderbook = ({ baseDenom, quoteDenom, baseTokenAddress, quoteTokenAddress 
 
   const orderbookContract = {
     address: ORDER_CONTRACT_ADDR,
-    abi: orderbookABI,
+    abi: ORDER_BOOK_ABI,
   }
 
   useContractReads({

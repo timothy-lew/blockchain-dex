@@ -8,7 +8,7 @@ import Orderbook from './Orderbook'
 
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
 import useApproveERC20ForSpend from '../hooks/useApproveERC20ForSpend'
-import { ORDER_CONTRACT_ADDR, orderBookAbi } from '../utils/constants'
+import { ORDER_CONTRACT_ADDR, ORDER_BOOK_ABI } from '../utils/constants'
 import marketsJson from '../utils/markets/markets.json'
 import ConnectWalletBtn from './ConnectWalletBtn'
 
@@ -45,7 +45,7 @@ function Order() {
 
   const { isLoading: orderLoading, isSuccess: orderSuccess, writeAsync } = useContractWrite({
     address: ORDER_CONTRACT_ADDR,
-    abi: orderBookAbi,
+    abi: ORDER_BOOK_ABI,
     functionName: isBuySide ? 'placeBuyOrder' : 'placeSellOrder',
   })
 
