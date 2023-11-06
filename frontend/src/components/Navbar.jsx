@@ -1,23 +1,19 @@
 import React from 'react'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { InjectedConnector } from 'wagmi/connectors/injected'
+import { useAccount, useDisconnect } from 'wagmi'
 
-import Metamask from '../assets/Metamask.svg'
 import Disconnect from '../assets/Disconnect.svg'
+import Metamask from '../assets/Metamask.svg'
+import ConnectWalletBtn from './ConnectWalletBtn'
 
 function Navbar() {
   const { address, isConnected } = useAccount()
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  })
   const { disconnect } = useDisconnect()
+
   return (
     <div className="bg-base min-w-full flex flex-row justify-between items-center px-12 py-6">
       <p>Some Logo</p>
       {!isConnected && (
-        <button onClick={() => connect()} className="bg-[#243056] font-bold py-2.5 px-5 text-[#5981F3] hover:text-[#3b4874] rounded-2xl">
-          Connect Wallet
-        </button>
+        <ConnectWalletBtn />
       )}
       {isConnected && (
         <div className='bg-secondary h-full flex flex-row items-center p-3 rounded'>
