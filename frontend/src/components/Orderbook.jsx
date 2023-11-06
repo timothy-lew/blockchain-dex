@@ -47,8 +47,8 @@ const Orderbook = ({ baseDenom, quoteDenom, baseTokenAddress, quoteTokenAddress 
       currentMarketSellOrders.sort((beforeOrder, afterOrder) => {
         const beforePrice = BigInt(beforeOrder.price)
         const afterPrice = BigInt(afterOrder.price)
-        if (beforePrice < afterPrice) return -1
-        if (beforePrice > afterPrice) return 1
+        if (beforePrice < afterPrice) return 1
+        if (beforePrice > afterPrice) return -1
         return 0
       })
       console.log('xxxBuy', data[0].result)

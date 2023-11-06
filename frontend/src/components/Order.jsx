@@ -162,12 +162,26 @@ function Order() {
         quoteTokenAddress={markets[marketIndex].quoteTokenAddress}
       />
       <div className="w-1/2 px-4 flex flex-col justify-center">
-        <MarketDropDown
-          markets={markets}
-          selectMarket={selectMarketIndex}
-        >
-          {markets[marketIndex].name}
-        </MarketDropDown>
+        <div className='flex flex-row justify-between items-center'>
+          <MarketDropDown
+            markets={markets}
+            selectMarket={selectMarketIndex}
+          >
+            {markets[marketIndex].name}
+          </MarketDropDown>
+          <div>
+            {isBuySide && (
+              <div className='flex items-center h-full'>
+                Placing limit order to buy {markets[marketIndex].baseDenom} with {markets[marketIndex].quoteDenom}
+              </div>
+            )}
+            {!isBuySide && (
+              <div className='flex items-center h-full'>
+                Placing limit order to sell {markets[marketIndex].baseDenom} for {markets[marketIndex].quoteDenom}
+              </div>
+            )}
+          </div>
+        </div>
         <NumberInput
           header="Price"
           onChangeFunc={(event) => handleFormChange('price', event.target.value)}
@@ -194,15 +208,15 @@ function Order() {
         />
         {isConnected && (
           <div className="flex flex-row mt-8 w-full gap-4 font-bold">
-            {isBuySide && <button disabled={!isConnected} onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Place limit order to buy {markets[marketIndex].baseDenom} with {markets[marketIndex].quoteDenom}</button>}
+            {isBuySide && <button disabled={!isConnected} onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
             <button disabled={!isConnected} onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
               <img src={ChangeSideIcon} className="block m-auto" />
             </button>
-            {!isBuySide && <button disabled={!isConnected} onClick={submitOrder} className="w-3/4 bg-red-500 p-4 rounded">Place limit order to sell {markets[marketIndex].baseDenom} for {markets[marketIndex].quoteDenom}</button>}
+            {!isBuySide && <button disabled={!isConnected} onClick={submitOrder} className="w-3/4 bg-red-500 p-4 rounded">Sell</button>}
           </div>
         )}
         {!isConnected && (
-          <ConnectWalletBtn classStyle="mt-8" />
+          <ConnectWalletBtn classStyle="mt-8 h-14" />
         )}
       </div>
     </div>
