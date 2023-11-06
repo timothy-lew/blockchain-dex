@@ -1,4 +1,4 @@
-const orderbookABI = [
+export const orderBookABI = [
   {
     "anonymous": false,
     "inputs": [
@@ -398,5 +398,3 @@ const orderbookABI = [
     "type": "function"
   }
 ]
-
-export default orderbookABI
