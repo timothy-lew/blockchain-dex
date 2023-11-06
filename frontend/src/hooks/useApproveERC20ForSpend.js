@@ -31,8 +31,9 @@ const useApproveERC20ForSpend = (baseTokenAddress, quoteTokenAddress, isBuySide)
       if(typeof spenderAddress !== 'string') {
         throw new Error('useApproveERC20ForSpend - spenderAddress is not a string')
       }
-      const approveAmount = BigInt(approveAmountBN.toString(10))
       
+      const approveAmount = BigInt(approveAmountBN.toString(10))
+
       console.log ('useApproveERC20ForSpend - Executing Approve')
       const txhash = await writeAsync({
         args:[spenderAddress, approveAmount],
