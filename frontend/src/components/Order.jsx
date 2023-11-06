@@ -152,7 +152,7 @@ function Order() {
       from: address,
     })
   }
-  console.log(isConnected)
+
   return (
     <div className="bg-[#0E111B] w-3/4 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
       <Orderbook
@@ -162,26 +162,12 @@ function Order() {
         quoteTokenAddress={markets[marketIndex].quoteTokenAddress}
       />
       <div className="w-1/2 px-4 flex flex-col justify-center">
-        <div className='flex flex-row justify-between items-center'>
-          <MarketDropDown
-            markets={markets}
-            selectMarket={selectMarketIndex}
-          >
-            {markets[marketIndex].name}
-          </MarketDropDown>
-          <div>
-            {isBuySide && (
-              <div className='flex items-center h-full'>
-                Placing limit order to buy {markets[marketIndex].baseDenom} with {markets[marketIndex].quoteDenom}
-              </div>
-            )}
-            {!isBuySide && (
-              <div className='flex items-center h-full'>
-                Placing limit order to sell {markets[marketIndex].baseDenom} for {markets[marketIndex].quoteDenom}
-              </div>
-            )}
-          </div>
-        </div>
+        <MarketDropDown
+          markets={markets}
+          selectMarket={selectMarketIndex}
+        >
+          {markets[marketIndex].name}
+        </MarketDropDown>
         <NumberInput
           header="Price"
           onChangeFunc={(event) => handleFormChange('price', event.target.value)}
@@ -197,6 +183,7 @@ function Order() {
           baseToken={markets[marketIndex].baseDenom}
           quoteToken={markets[marketIndex].quoteDenom}
           errorText={errObj.quantityError}
+          isBuySide={isBuySide}
         />
         <NumberInput
           header="Total"

@@ -21,8 +21,8 @@ const useApproveERC20ForSpend = (baseTokenAddress, quoteTokenAddress, isBuySide)
       functionName: 'approve',
     })
   
-    const approve = async (approveAmount, walletAddress, spenderAddress) => {
-      if(!(approveAmount instanceof BigNumber)) {
+    const approve = async (approveAmountBN, walletAddress, spenderAddress) => {
+      if(!(approveAmountBN instanceof BigNumber)) {
         throw new Error('useApproveERC20ForSpend - approveAmount is not a BigNumber')
       }
       if(typeof walletAddress !== 'string') {
@@ -31,6 +31,8 @@ const useApproveERC20ForSpend = (baseTokenAddress, quoteTokenAddress, isBuySide)
       if(typeof spenderAddress !== 'string') {
         throw new Error('useApproveERC20ForSpend - spenderAddress is not a string')
       }
+      const approveAmount = BigInt(approveAmountBN.toString(10))
+      
       console.log ('useApproveERC20ForSpend - Executing Approve')
       const txhash = await writeAsync({
         args:[spenderAddress, approveAmount],
