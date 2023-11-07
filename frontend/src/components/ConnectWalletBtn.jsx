@@ -8,7 +8,7 @@ const ConnectWalletBtn = ({ classStyle = '' }) => {
     connector: new InjectedConnector(),
   })
   return (
-    <button onClick={() => connect()} className={`bg-[#243056] font-bold py-2.5 px-5 text-[#5981F3] hover:text-[#3b4874] rounded-2xl ${classStyle}`}>
+    <button type="button" onClick={() => connect()} className={`bg-[#243056] font-bold py-2.5 px-5 text-[#5981F3] hover:text-[#3b4874] rounded-2xl ${classStyle}`}>
       Connect Wallet
     </button>
   )

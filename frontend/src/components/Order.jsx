@@ -7,7 +7,7 @@ import NumberInput from './NumberInput'
 import Orderbook from './Orderbook'
 
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
-import useApproveERC20ForSpend from '../hooks/useApproveERC20ForSpend'
+import { useApproveERC20ForSpend, useGetTokens } from '../hooks'
 import { ORDER_BOOK_ABI, ORDER_CONTRACT_ADDR } from '../utils/constants'
 import marketsJson from '../utils/markets/markets.json'
 import ConnectWalletBtn from './ConnectWalletBtn'

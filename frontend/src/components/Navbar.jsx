@@ -23,7 +23,7 @@ function Navbar() {
         <ConnectWalletBtn classStyle="ml-auto" />
       )}
       {isConnected && (
-        <div className='bg-secondary h-full flex flex-row items-center p-3 rounded'>
+        <div className='bg-secondary h-full flex flex-row items-center p-3 rounded ml-auto'>
           <img src={Metamask} width="24px" />
           <div className="ml-2 font-bold">{address.slice(0, 6)}...{address.slice(address.length - 5)}</div>
           <button className="ml-2" onClick={() => disconnect()}>
