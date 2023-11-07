@@ -138,16 +138,16 @@ function Order() {
     }
 
     // Shifting to ERC20 token decimal
-    const shiftedPrice = BigInt(new BigNumber(formState.price).shiftedBy(18).toString(10))
-    const shiftedQuantity = BigInt(new BigNumber(formState.quantity).shiftedBy(18).toString(10))
-    const shiftedTotal = BigInt(new BigNumber(formState.total).shiftedBy(18).toString(10))
+    const shiftedPrice = new BigNumber(formState.price).shiftedBy(18)
+    const shiftedQuantity = new BigNumber(formState.quantity).shiftedBy(18)
+    const shiftedTotal = new BigNumber(formState.total).shiftedBy(18)
 
     // Approve ERC20 token for spending by order contract
     const approveAmount = isBuySide ? shiftedTotal : shiftedQuantity
 
     await approve(approveAmount, address, ORDER_CONTRACT_ADDR)
     await writeAsync({
-      args: [shiftedPrice, shiftedQuantity, baseTokenAddress, quoteTokenAddress],
+      args: [BigInt(shiftedPrice.toString(10)), BigInt(shiftedQuantity.toString(10)), baseTokenAddress, quoteTokenAddress],
       from: address,
     })
   }
