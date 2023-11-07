@@ -8,7 +8,7 @@ import Orderbook from './Orderbook'
 
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
 import useApproveERC20ForSpend from '../hooks/useApproveERC20ForSpend'
-import { ORDER_CONTRACT_ADDR, ORDER_BOOK_ABI } from '../utils/constants'
+import { ORDER_BOOK_ABI, ORDER_CONTRACT_ADDR } from '../utils/constants'
 import marketsJson from '../utils/markets/markets.json'
 import ConnectWalletBtn from './ConnectWalletBtn'
 
@@ -41,9 +41,9 @@ function Order() {
   const { data: baseTokenBalance } = useBalance({ address: address, token: baseTokenAddress === '' ? undefined : baseTokenAddress })
   const { data: quoteTokenBalance } = useBalance({ address: address, token: quoteTokenAddress === '' ? undefined : quoteTokenAddress })
 
-  const { approve, approveLoading } = useApproveERC20ForSpend(markets[marketIndex].baseTokenAddress, markets[marketIndex].quoteTokenAddress, isBuySide)
+  const { approve } = useApproveERC20ForSpend(markets[marketIndex].baseTokenAddress, markets[marketIndex].quoteTokenAddress, isBuySide)
 
-  const { isLoading: orderLoading, isSuccess: orderSuccess, writeAsync } = useContractWrite({
+  const { writeAsync } = useContractWrite({
     address: ORDER_CONTRACT_ADDR,
     abi: ORDER_BOOK_ABI,
     functionName: isBuySide ? 'placeBuyOrder' : 'placeSellOrder',

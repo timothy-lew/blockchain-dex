@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ActiveOrder, Navbar, Order } from './components'
+import { ActiveOrder, Navbar, Order } from '../components'
 
 const App = () => {
   return (

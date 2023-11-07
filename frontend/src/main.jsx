@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { WagmiConfig, createConfig, configureChains } from 'wagmi'
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { hardhat } from 'wagmi/chains'
-import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from 'wagmi/connectors/injected'
+import { publicProvider } from 'wagmi/providers/public'
 
-import App from './App'
 import './index.css'
-
+import { Asset, ErrorPage, Root } from './pages'
 
 const { chains, publicClient } = configureChains(
   [hardhat],
@@ -20,12 +20,24 @@ const config = createConfig({
   publicClient,
 })
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/asset',
+    element: <Asset />,
+  },
+])
+
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
   <React.StrictMode>
     <WagmiConfig config={config}>
-      <App />
+      <RouterProvider router={router} />
     </WagmiConfig>
   </React.StrictMode>
 )
