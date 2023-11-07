@@ -7,9 +7,8 @@ import NumberInput from './NumberInput'
 import Orderbook from './Orderbook'
 
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
-import { useApproveERC20ForSpend, useGetTokens } from '../hooks'
+import { useApproveERC20ForSpend, useGetMarkets } from '../hooks'
 import { ORDER_BOOK_ABI, ORDER_CONTRACT_ADDR } from '../utils/constants'
-import marketsJson from '../utils/markets/markets.json'
 import ConnectWalletBtn from './ConnectWalletBtn'
 
 const defaultFormState = {
@@ -27,8 +26,6 @@ const defaultErrorState = {
   totalError: '',
 }
 
-const markets = marketsJson.markets
-
 function Order() {
   const [formState, setFormState] = useState(defaultFormState)
   const [isBuySide, setIsBuySide] = useState(true)
@@ -36,6 +33,8 @@ function Order() {
   const [errObj, setErrObj] = useState(defaultErrorState)
 
   const { address, isConnected } = useAccount()
+
+  const markets = useGetMarkets()
 
   const { baseTokenAddress, quoteTokenAddress } = markets[marketIndex]
   const { data: baseTokenBalance } = useBalance({ address: address, token: baseTokenAddress === '' ? undefined : baseTokenAddress })

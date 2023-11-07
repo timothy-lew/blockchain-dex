@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAccount, useContractEvent, useContractWrite } from 'wagmi'
 
 import { Navbar } from '../components'
@@ -90,16 +90,21 @@ const Asset = () => {
     //Reset Form
     setTokenName('')
     setTokenTicker('')
-    setTokenSupply(0)
+    setTokenSupply('')
+  }
+
+  const closeDiv = () => {
+    setTokenAddr('')
+    setOpen(false)
   }
 
   useEffect(() => {
     if (isLoading && !isSuccess) setOpen(true)
-    console.log('xxx', isLoading, isSuccess)
   }, [isLoading, isSuccess])
 
   return (
-    <div className="bg-gradient-to-b from-baseColor from-28% to-baseSecondaryColor to-75% min-h-screen font-body text-textMain">
+    <div className="relative bg-gradient-to-b from-baseColor from-28% to-baseSecondaryColor to-75% min-h-screen font-body text-textMain">
+      {open && (<div className="absolute w-screen h-screen bg-[#00000066] blur" />)}
       <Navbar />
       <form className="bg-[#0E111B] w-96 mx-auto mt-10 border-2 border-solid border-borderColor rounded-2xl p-8">
         <fieldset className="flex flex-col gap-6 text-2xl">
@@ -131,18 +136,18 @@ const Asset = () => {
       </form>
 
       {open && (
-        <div className="flex flex-col justify-center items-center bg-[#0E111B] w-[600px] mx-auto mt-10 border-2 border-solid border-borderColor rounded-2xl p-8">
+        <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col justify-center items-center bg-[#0E111B] w-[600px] mx-auto mt-10 border-2 border-solid border-borderColor rounded-2xl p-8">
           {isLoading && (
             <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-blue-600" />
           )}
           {(!isLoading && isSuccess) && (
             <div className="flex flex-col gap-4 text-xl text-center text-textMain">
-              <p>Import Token using this address:</p>
+              <p>Token contract address:</p>
               <p>{tokenAddr.toLowerCase() ?? '0x00'}</p>
-              <p>Please check your wallet for the new minted tokens</p>
+              <p>Import into your wallet, to see the new token balance</p>
             </div>
           )}
-          <button onClick={() => setOpen(false)} className='w-1/2 mt-8 bg-[#243056] self-center font-bold py-2.5 px-5 text-[#5981F3] hover:text-[#3b4874] rounded-2xl'>Close</button>
+          <button onClick={closeDiv} className='w-1/2 mt-8 bg-[#243056] self-center font-bold py-2.5 px-5 text-[#5981F3] hover:text-[#3b4874] rounded-2xl'>Close</button>
         </div>
       )}
     </div>
