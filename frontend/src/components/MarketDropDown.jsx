@@ -20,8 +20,8 @@ const MarketDropDown = ({ children, markets, selectMarket }) => {
     <div className='relative bg-baseColor w-[150px] p-2 rounded cursor-pointer'>
       <button className="flex flex-row w-full justify-between items-center font-medium text-xl" onClick={() => setOpen(!open)}>
         {children}
-        {!open && (<img src={ArrowDown} width="24px" height="24px" />)}
-        {open && (<img src={ArrowUp} width="24px" height="24px" />)}
+        {!open && (<img src={ArrowDown} width="24px" height="24px" className='invert' />)}
+        {open && (<img src={ArrowUp} width="24px" height="24px" className='invert' />)}
       </button>
       {/* border-2 border-solid border-tertiary divide-y-2 divide-solid divide-tertiary  */}
       {open && (
