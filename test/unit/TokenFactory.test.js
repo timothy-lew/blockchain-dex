@@ -4,7 +4,7 @@ const { developmentChains } = require('../../helper-hardhat-config');
 
 !developmentChains.includes(network.name)
   ? describe.skip
-  : describe('APA', function () {
+  : describe('TokenFactory', function () {
       let Token;
       let Factory;
       let tokenInstance;

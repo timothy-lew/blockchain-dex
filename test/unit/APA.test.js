@@ -93,7 +93,7 @@ const { developmentChains } = require('../../helper-hardhat-config');
         }
       });
 
-      it('request too much from faucet', async function () {
+      it('not enough balance', async function () {
         const amountToRequest = ethers.parseEther('20000');
 
         try {

@@ -32,8 +32,15 @@ contract Token is ERC20 {
 }
 
 contract TokenFactory {
+    struct TokenInfo {
+        string name;
+        string ticker;
+        address tokenAddress;
+    }
+
     address[] public tokens;
     uint256 public tokenCount;
+    mapping(address => TokenInfo) public tokenInfoMap; // Map token address to token information
     event TokenDeployed(address tokenAddress);
 
     function deployToken(
@@ -45,7 +52,31 @@ contract TokenFactory {
         token.transfer(msg.sender, _supply);
         tokens.push(address(token));
         tokenCount += 1;
+
+        // Store token information
+        TokenInfo storage tokenInfo = tokenInfoMap[address(token)];
+        tokenInfo.name = _name;
+        tokenInfo.ticker = _ticker;
+        tokenInfo.tokenAddress = address(token);
+
         emit TokenDeployed(address(token));
         return address(token);
+    }
+
+    // Function to get token information by providing the token address
+    function getTokenInfo(
+        address _tokenAddress
+    ) external view returns (TokenInfo memory) {
+        return tokenInfoMap[_tokenAddress];
+    }
+
+    // Function to get all token information
+    function getAllTokenInfo() external view returns (TokenInfo[] memory) {
+        TokenInfo[] memory allTokenInfo = new TokenInfo[](tokenCount);
+        for (uint256 i = 0; i < tokenCount; i++) {
+            address tokenAddress = tokens[i];
+            allTokenInfo[i] = tokenInfoMap[tokenAddress];
+        }
+        return allTokenInfo;
     }
 }
