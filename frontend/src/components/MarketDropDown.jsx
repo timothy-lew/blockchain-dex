@@ -25,7 +25,7 @@ const MarketDropDown = ({ children, markets, selectMarket }) => {
       </button>
       {/* border-2 border-solid border-tertiary divide-y-2 divide-solid divide-tertiary  */}
       {open && (
-        <div className="absolute left-0 top-[50px] flex flex-col items-start rounded bg-baseColor w-full p-2 cursor-pointer">
+        <div className="absolute left-0 top-[50px] h-96 overflow-y-auto flex flex-col items-start rounded bg-baseColor w-full p-2 cursor-pointer">
           {markets?.length > 0 && markets.map((market, index) => (
             <div className="text-xl w-full p-4 hover:bg-blue-950 rounded-r-lg border-l-transparent hover:border-l-white border-l-4" key={`market-dropdown-${index}`} onClick={() => handleMarketClick(index)}>{market?.name}</div>
           ))}

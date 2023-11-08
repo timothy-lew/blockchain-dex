@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import { useContractRead } from 'wagmi'
 
-import marketsJson from '../utils/markets/markets.json'
 import { TOKEN_FACTORY_ABI, TOKEN_FACTORY_ADDR } from '../utils/constants'
+import marketsJson from '../utils/markets/markets.json'
 import { defaultTokens } from '../utils/tokens'
 
 const initialMarkets = marketsJson.markets
@@ -13,9 +13,8 @@ const useGetMarkets = () => {
     address: TOKEN_FACTORY_ADDR,
     abi: TOKEN_FACTORY_ABI,
     functionName: 'getAllTokenInfo',
-    cacheOnBlock: true,
   })
-  
+
   useEffect(() => {
     const quoteDenomArr = markets.map((market) => {
       return market.quoteDenom
