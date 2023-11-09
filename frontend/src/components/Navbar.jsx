@@ -12,7 +12,10 @@ function Navbar() {
 
   return (
     <div className="bg-base min-w-full flex flex-row items-center px-12 py-6">
-      <p>Some Logo</p>
+      <div className='text-center'>
+        <p className='text-4xl text-[#f7931a] font-sans'>VoltDex</p>
+        <p className='text-xs'>Decentralised Exchange</p>
+      </div>
       <Link to="/" className="ml-16 text-xl hover:bg-[#222a3a] cursor-pointer px-4 py-2 rounded font-medium duration-300">
         Trade
       </Link>
