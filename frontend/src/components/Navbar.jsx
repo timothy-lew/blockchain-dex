@@ -1,26 +1,29 @@
 import React from 'react'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { InjectedConnector } from 'wagmi/connectors/injected'
+import { Link } from "react-router-dom"
+import { useAccount, useDisconnect } from 'wagmi'
 
-import Metamask from '../assets/Metamask.svg'
 import Disconnect from '../assets/Disconnect.svg'
+import Metamask from '../assets/Metamask.svg'
+import ConnectWalletBtn from './ConnectWalletBtn'
 
 function Navbar() {
   const { address, isConnected } = useAccount()
-  const { connect } = useConnect({
-    connector: new InjectedConnector(),
-  })
   const { disconnect } = useDisconnect()
+
   return (
-    <div className="bg-base min-w-full flex flex-row justify-between items-center px-12 py-6">
+    <div className="bg-base min-w-full flex flex-row items-center px-12 py-6">
       <p>Some Logo</p>
+      <Link to="/" className="ml-16 text-xl hover:bg-[#222a3a] cursor-pointer px-4 py-2 rounded font-medium duration-300">
+        Trade
+      </Link>
+      <Link to="/asset" className="ml-16 text-xl hover:bg-[#222a3a] cursor-pointer px-4 py-2 rounded font-medium duration-300">
+        Asset
+      </Link>
       {!isConnected && (
-        <button onClick={() => connect()} className="bg-[#243056] font-bold py-2.5 px-5 text-[#5981F3] hover:text-[#3b4874] rounded-2xl">
-          Connect Wallet
-        </button>
+        <ConnectWalletBtn classStyle="ml-auto" />
       )}
       {isConnected && (
-        <div className='bg-secondary h-full flex flex-row items-center p-3 rounded'>
+        <div className='bg-secondary h-full flex flex-row items-center p-3 rounded ml-auto'>
           <img src={Metamask} width="24px" />
           <div className="ml-2 font-bold">{address.slice(0, 6)}...{address.slice(address.length - 5)}</div>
           <button className="ml-2" onClick={() => disconnect()}>
