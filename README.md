@@ -55,29 +55,30 @@ node --version
 
 # Solidity
 
-1. Compile contracts
+1. Copy .env.example into .env file
+2. Compile contracts
 
 ```console
 yarn hardhat compile
 ```
 
-2. Run local blockchain on hardhat
+3. Run local blockchain on hardhat
 
 ```console
 yarn hardhat node
 ```
 
-3. Deploy locally
+4. Deploy locally
 
 ```
 yarn hardhat deploy --network hardhat/localhost
 ```
 
-4.0. Import local hardhat network to metamask. (https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/)  
-4.1. Import coin to metamask by specifying the contract address.
-4.2. If you get a nonce error in metamask, reset the metamask nonce settings for both wallets
+5.0. Import local hardhat network to metamask. (https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/)  
+5.1. Import coin to metamask by specifying the contract address.
+5.2. If you get a nonce error in metamask, reset the metamask nonce settings for both wallets
 
-5. Run tests
+6. Run tests
 
 ```
 yarn test
@@ -86,21 +87,25 @@ yarn test
 # Frontend
 
 1. Go into the frontend folder
+
 ```
 cd frontend
 ```
-2. Run this to install  the required dependencies
+
+2. Run this to install the required dependencies
+
 ```
 yarn
 ```
+
 3. Run this to start the frontend application
+
 ```
 yarn start
 ```
+
 4. Paste this link in Chrome Browser to view the application
+
 ```
 http://localhost:5173/
 ```
-
-
-
