@@ -17,16 +17,17 @@ const MarketDropDown = ({ children, markets, selectMarket }) => {
   }
 
   return (
-    <div className='relative bg-secondary w-36 p-2 rounded cursor-pointer'>
-      <button className="flex flex-row w-full justify-between items-center text-xl" onClick={() => setOpen(!open)}>
+    <div className='relative bg-baseColor w-[150px] p-2 rounded cursor-pointer'>
+      <button className="flex flex-row w-full justify-between items-center font-medium text-xl" onClick={() => setOpen(!open)}>
         {children}
-        {!open && (<img src={ArrowDown} />)}
-        {open && (<img src={ArrowUp} />)}
+        {!open && (<img src={ArrowDown} width="24px" height="24px" className='invert' />)}
+        {open && (<img src={ArrowUp} width="24px" height="24px" className='invert' />)}
       </button>
+      {/* border-2 border-solid border-tertiary divide-y-2 divide-solid divide-tertiary  */}
       {open && (
-        <div className="absolute bg-secondary w-fit p-2 border-2 border-solid border-tertiary divide-y-2 divide-solid divide-tertiary cursor-pointer">
+        <div className="absolute left-0 top-[50px] h-96 overflow-y-auto flex flex-col items-start rounded bg-baseColor w-full p-2 cursor-pointer">
           {markets?.length > 0 && markets.map((market, index) => (
-            <div className="text-xl" key={`market-dropdown-${index}`} onClick={() => handleMarketClick(index)}>{market?.name}</div>
+            <div className="text-xl w-full p-4 hover:bg-blue-950 rounded-r-lg border-l-transparent hover:border-l-white border-l-4" key={`market-dropdown-${index}`} onClick={() => handleMarketClick(index)}>{market?.name}</div>
           ))}
         </div>
       )}

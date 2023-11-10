@@ -50,4 +50,20 @@ const { developmentChains } = require('../../helper-hardhat-config');
         assert.equal(ticker, 'NTK');
         assert.equal(supply, ethers.parseEther('500'));
       });
+
+      it('get all token info', async () => {
+        await factoryInstance.deployToken(
+          'NewToken',
+          'NTK',
+          ethers.parseEther('500')
+        );
+        await factoryInstance.deployToken(
+          'ABCToken',
+          'ABC',
+          ethers.parseEther('700')
+        );
+
+        const tokens = await factoryInstance.getAllTokenInfo();
+        assert.equal(tokens.length, 2);
+      });
     });

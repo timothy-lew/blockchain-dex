@@ -7,9 +7,9 @@ import NumberInput from './NumberInput'
 import Orderbook from './Orderbook'
 
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
-import useApproveERC20ForSpend from '../hooks/useApproveERC20ForSpend'
-import { ORDER_CONTRACT_ADDR, orderbookABI } from '../utils/constants'
-import marketsJson from '../utils/markets/markets.json'
+import { useApproveERC20ForSpend, useGetMarkets } from '../hooks'
+import { ORDER_BOOK_ABI, ORDER_CONTRACT_ADDR } from '../utils/constants'
+import ConnectWalletBtn from './ConnectWalletBtn'
 
 const defaultFormState = {
   inputPrice: '',
@@ -26,8 +26,6 @@ const defaultErrorState = {
   totalError: '',
 }
 
-const markets = marketsJson.markets
-
 function Order() {
   const [formState, setFormState] = useState(defaultFormState)
   const [isBuySide, setIsBuySide] = useState(true)
@@ -36,15 +34,17 @@ function Order() {
 
   const { address, isConnected } = useAccount()
 
+  const markets = useGetMarkets()
+
   const { baseTokenAddress, quoteTokenAddress } = markets[marketIndex]
   const { data: baseTokenBalance } = useBalance({ address: address, token: baseTokenAddress === '' ? undefined : baseTokenAddress })
   const { data: quoteTokenBalance } = useBalance({ address: address, token: quoteTokenAddress === '' ? undefined : quoteTokenAddress })
 
-  const { approve, approveLoading } = useApproveERC20ForSpend(markets[marketIndex].baseTokenAddress, markets[marketIndex].quoteTokenAddress, isBuySide)
+  const { approve } = useApproveERC20ForSpend(markets[marketIndex].baseTokenAddress, markets[marketIndex].quoteTokenAddress, isBuySide)
 
-  const { isLoading: orderLoading, isSuccess: orderSuccess, writeAsync } = useContractWrite({
+  const { writeAsync } = useContractWrite({
     address: ORDER_CONTRACT_ADDR,
-    abi: orderbookABI,
+    abi: ORDER_BOOK_ABI,
     functionName: isBuySide ? 'placeBuyOrder' : 'placeSellOrder',
   })
 
@@ -100,6 +100,9 @@ function Order() {
   }
 
   const submitOrder = async () => {
+    // Disabled if wallet not connected
+    if (!isConnected) return
+
     // Clear Error
     const submitOrderErr = {
       priceError: '',
@@ -144,13 +147,13 @@ function Order() {
 
     await approve(approveAmount, address, ORDER_CONTRACT_ADDR)
     await writeAsync({
-      args: [shiftedPrice, shiftedQuantity, baseTokenAddress, quoteTokenAddress],
+      args: [BigInt(shiftedPrice.toString(10)), BigInt(shiftedQuantity.toString(10)), baseTokenAddress, quoteTokenAddress],
       from: address,
     })
   }
 
   return (
-    <div className="bg-[#0E111B] w-1/2 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
+    <div className="bg-[#0E111B] w-3/4 min-h-[40%] flex flex-row mt-[5%] border-2 border-solid border-borderColor rounded-2xl">
       <Orderbook
         baseDenom={markets[marketIndex].baseDenom}
         quoteDenom={markets[marketIndex].quoteDenom}
@@ -179,6 +182,7 @@ function Order() {
           baseToken={markets[marketIndex].baseDenom}
           quoteToken={markets[marketIndex].quoteDenom}
           errorText={errObj.quantityError}
+          isBuySide={isBuySide}
         />
         <NumberInput
           header="Total"
@@ -188,13 +192,18 @@ function Order() {
           quoteToken={markets[marketIndex].quoteDenom}
           errorText={errObj.totalError}
         />
-        <div className="flex flex-row mt-8 w-full gap-4 font-bold">
-          {isBuySide && <button onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
-          <button onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
-            <img src={ChangeSideIcon} className="block m-auto" />
-          </button>
-          {!isBuySide && <button onClick={submitOrder} className="w-3/4 bg-red-500 p-4 rounded">Sell</button>}
-        </div>
+        {isConnected && (
+          <div className="flex flex-row mt-8 w-full gap-4 font-bold">
+            {isBuySide && <button disabled={!isConnected} onClick={submitOrder} className="w-3/4 bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100% p-4 rounded">Buy</button>}
+            <button disabled={!isConnected} onClick={() => setIsBuySide(!isBuySide)} className={`w-1/4 ${isBuySide ? 'bg-red-500' : 'bg-gradient-to-l from-green-400 from-0% to-emerald-600 to-100%'} rounded`}>
+              <img src={ChangeSideIcon} className="block m-auto" />
+            </button>
+            {!isBuySide && <button disabled={!isConnected} onClick={submitOrder} className="w-3/4 bg-red-500 p-4 rounded">Sell</button>}
+          </div>
+        )}
+        {!isConnected && (
+          <ConnectWalletBtn classStyle="mt-8 h-14" />
+        )}
       </div>
     </div>
   )
