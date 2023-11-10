@@ -82,3 +82,25 @@ yarn hardhat deploy --network hardhat/localhost
 ```
 yarn test
 ```
+
+# Frontend
+
+1. Go into the frontend folder
+```
+cd frontend
+```
+2. Run this to install  the required dependencies
+```
+yarn
+```
+3. Run this to start the frontend application
+```
+yarn start
+```
+4. Paste this link in Chrome Browser to view the application
+```
+http://localhost:5173/
+```
+
+
+
