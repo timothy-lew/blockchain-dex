@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react'
-import { useContractRead } from 'wagmi'
+import { useContractRead, useNetwork } from 'wagmi'
 
 import { TOKEN_FACTORY_ABI, TOKEN_FACTORY_ADDR } from '../utils/constants'
 import marketsJson from '../utils/markets/markets.json'
-import { defaultTokens } from '../utils/tokens'
+import { defaultLocalTokens, defaultTestNetTokens } from '../utils/tokens'
 
 const initialMarkets = marketsJson.markets
 
 const useGetMarkets = () => {
   const [markets, setMarkets] = useState(initialMarkets)
+  const { chain } = useNetwork()
   const { data } = useContractRead({
     address: TOKEN_FACTORY_ADDR,
     abi: TOKEN_FACTORY_ABI,
     functionName: 'getAllTokenInfo',
   })
+  console.log(chain)
+  const defaultTokens = chain?.id === 31337 ? defaultLocalTokens : defaultTestNetTokens
 
   useEffect(() => {
     const quoteDenomArr = markets.map((market) => {

@@ -4,7 +4,7 @@ export const memTokenAddress = '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0'
 
 export const jetTokenAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9'
 
-export const defaultTokens = [
+export const defaultLocalTokens = [
   {
     name: 'APATOKEN',
     ticker: 'APA',

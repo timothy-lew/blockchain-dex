@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { configureChains, createConfig, WagmiConfig } from 'wagmi'
+import { configureChains, createConfig, sepolia, WagmiConfig } from 'wagmi'
 import { hardhat } from 'wagmi/chains'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { publicProvider } from 'wagmi/providers/public'
@@ -10,7 +10,7 @@ import './index.css'
 import { Asset, ErrorPage, Root } from './pages'
 
 const { chains, publicClient } = configureChains(
-  [hardhat],
+  [hardhat, sepolia],
   [publicProvider()],
 )
 

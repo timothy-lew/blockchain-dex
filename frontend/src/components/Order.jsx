@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import React, { useState } from 'react'
-import { useAccount, useBalance, useContractWrite } from 'wagmi'
+import { useAccount, useBalance, useContractWrite, useNetwork } from 'wagmi'
 
 import MarketDropDown from './MarketDropDown'
 import NumberInput from './NumberInput'
@@ -9,6 +9,7 @@ import Orderbook from './Orderbook'
 import ChangeSideIcon from '../assets/ChangeSideIcon.svg'
 import { useApproveERC20ForSpend, useGetMarkets } from '../hooks'
 import { ORDER_BOOK_ABI, ORDER_CONTRACT_ADDR } from '../utils/constants'
+import { ORDER_BOOK_ABI_TESTNET, ORDER_CONTRACT_ADDR_TESTNET } from '../utils/constantsTestnet'
 import ConnectWalletBtn from './ConnectWalletBtn'
 
 const defaultFormState = {
@@ -33,6 +34,7 @@ function Order() {
   const [errObj, setErrObj] = useState(defaultErrorState)
 
   const { address, isConnected } = useAccount()
+  const { chain } = useNetwork()
 
   const markets = useGetMarkets()
 
@@ -43,8 +45,8 @@ function Order() {
   const { approve } = useApproveERC20ForSpend(markets[marketIndex].baseTokenAddress, markets[marketIndex].quoteTokenAddress, isBuySide)
 
   const { writeAsync } = useContractWrite({
-    address: ORDER_CONTRACT_ADDR,
-    abi: ORDER_BOOK_ABI,
+    address: chain?.id === 31337 ? ORDER_CONTRACT_ADDR : ORDER_CONTRACT_ADDR_TESTNET,
+    abi: chain?.id === 31337 ? ORDER_BOOK_ABI : ORDER_BOOK_ABI_TESTNET,
     functionName: isBuySide ? 'placeBuyOrder' : 'placeSellOrder',
   })
 

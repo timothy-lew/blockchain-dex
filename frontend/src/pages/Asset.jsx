@@ -1,10 +1,11 @@
 import BigNumber from 'bignumber.js'
 import React, { useEffect, useState } from 'react'
-import { useAccount, useContractEvent, useContractWrite } from 'wagmi'
+import { useAccount, useContractEvent, useContractWrite, useNetwork } from 'wagmi'
 
 import { Navbar } from '../components'
 import ConnectWalletBtn from '../components/ConnectWalletBtn'
 import { TOKEN_FACTORY_ABI, TOKEN_FACTORY_ADDR } from '../utils/constants'
+import { TOKEN_FACTORY_ADDR_TESTNET } from '../utils/constantsTestnet'
 
 const defaultErrorState = {
   tokenNameErr: '',
@@ -22,6 +23,8 @@ const Asset = () => {
 
   const { address, isConnected } = useAccount()
 
+  const { chain } = useNetwork()
+
   const { data, isLoading, isSuccess, write } = useContractWrite({
     address: TOKEN_FACTORY_ADDR,
     abi: TOKEN_FACTORY_ABI,
@@ -32,7 +35,7 @@ const Asset = () => {
   })
 
   useContractEvent({
-    address: TOKEN_FACTORY_ADDR,
+    address: chain.id === 31337 ? TOKEN_FACTORY_ADDR : TOKEN_FACTORY_ADDR_TESTNET,
     abi: TOKEN_FACTORY_ABI,
     eventName: 'TokenDeployed',
     listener(log) {

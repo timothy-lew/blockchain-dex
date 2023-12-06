@@ -1,1 +1,2 @@
-export { apaTokenAddress, memTokenAddress, jetTokenAddress, defaultTokens } from './tokens'
+export { apaTokenAddress, memTokenAddress, jetTokenAddress, defaultLocalTokens } from './tokens'
+export { defaultTestNetTokens } from './tokensTestnet'
